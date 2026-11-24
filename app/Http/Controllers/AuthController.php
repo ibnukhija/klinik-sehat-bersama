@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,14 +15,7 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $demoUsers = User::orderBy('id')->get()->sortBy(fn (User $u) => match ($u->role) {
-            User::ROLE_ADMIN => 1,
-            User::ROLE_DOKTER => 2,
-            User::ROLE_KASIR => 3,
-            default => 4,
-        })->values();
-
-        return view('auth.login', compact('demoUsers'));
+        return view('auth.login');
     }
 
     public function login(Request $request): RedirectResponse
@@ -44,21 +36,6 @@ class AuthController extends Controller
         return back()
             ->withErrors(['identity' => 'Username/email atau password salah.'])
             ->onlyInput('identity');
-    }
-
-    public function quickLogin(Request $request): RedirectResponse
-    {
-        abort_unless(app()->environment('local', 'testing'), 403);
-
-        $data = $request->validate([
-            'username' => ['required', 'string', 'exists:users,username'],
-        ]);
-
-        $user = User::where('username', $data['username'])->firstOrFail();
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route('dashboard')->with('success', "Masuk sebagai {$user->name} ({$user->roleLabel()}).");
     }
 
     public function logout(Request $request): RedirectResponse

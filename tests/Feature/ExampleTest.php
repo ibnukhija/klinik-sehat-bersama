@@ -9,9 +9,14 @@ class ExampleTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_home_redirects_to_login_and_login_renders(): void
+    public function test_home_redirects_to_login_and_login_renders_without_quick_login(): void
     {
         $this->get('/')->assertRedirect('/login');
-        $this->get('/login')->assertStatus(200)->assertSee('Klinik Sehat Bersama');
+        $this->get('/login')
+            ->assertStatus(200)
+            ->assertSee('Klinik Sehat Bersama')
+            ->assertDontSee('Akses Cepat Demo');
+
+        $this->post('/quick-login', ['username' => 'admin'])->assertNotFound();
     }
 }
