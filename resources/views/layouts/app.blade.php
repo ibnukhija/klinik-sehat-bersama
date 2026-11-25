@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Klinik Sehat Bersama')</title>
+    <link rel="icon" type="image/png" href="{{ asset('hospital.png') }}?v=2">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen antialiased">
